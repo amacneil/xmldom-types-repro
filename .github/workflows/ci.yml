@@ -1,0 +1,28 @@
+name: CI
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - 1-old-import
+          - 1-old-noimport
+          - 2-new-import
+          - 2-new-noimport
+
+    name: ${{ matrix.project }}
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.project }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+      - run: npm ci
+      - run: npm run build
